@@ -31,6 +31,9 @@ export function Home() {
         </Text>
       </Title>
 
+      <Text ta="center" mt="xl">
+        Web game coming soon
+      </Text>
       <Button
         variant="filled"
         color="blue"
@@ -41,7 +44,7 @@ export function Home() {
           handleClick();
         }}
       >
-        Log me
+        Ping
       </Button>
 
       {response && (
