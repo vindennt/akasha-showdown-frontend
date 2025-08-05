@@ -10,7 +10,7 @@ export function Home() {
     const url = import.meta.env.VITE_API_URL;
 
     try {
-      const res = await fetch(`${url}/ping`);
+      const res = await fetch(`${url}/health/ping`);
       const text = await res.text();
       setResponse(text);
     } catch (error) {
