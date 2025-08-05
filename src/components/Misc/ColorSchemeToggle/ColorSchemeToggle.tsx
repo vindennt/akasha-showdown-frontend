@@ -1,13 +1,17 @@
-import { Button, Group, useMantineColorScheme } from "@mantine/core";
+import { Switch, Group, useMantineColorScheme } from "@mantine/core";
 
 export function ColorSchemeToggle() {
-  const { setColorScheme } = useMantineColorScheme();
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
   return (
     <Group justify="center" mt="xl">
-      <Button onClick={() => setColorScheme("light")}>Light</Button>
-      <Button onClick={() => setColorScheme("dark")}>Dark</Button>
-      <Button onClick={() => setColorScheme("auto")}>Auto</Button>
+      <Switch
+        checked={colorScheme === "dark"}
+        onChange={toggleColorScheme}
+        size="lg"
+        color="dark"
+        aria-label="Toggle color scheme"
+      />
     </Group>
   );
 }

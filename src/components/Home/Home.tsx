@@ -1,6 +1,7 @@
 import { Button, Text, Title } from "@mantine/core";
 import { useState } from "react";
 import classes from "./Home.module.css";
+import { ColorSchemeToggle } from "../Misc/ColorSchemeToggle/ColorSchemeToggle";
 
 export function Home() {
   const [response, setResponse] = useState("");
@@ -29,6 +30,7 @@ export function Home() {
         >
           Showdown
         </Text>
+        <ColorSchemeToggle />
       </Title>
 
       <Text ta="center" mt="xl">
