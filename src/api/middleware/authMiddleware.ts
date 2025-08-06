@@ -1,6 +1,11 @@
-import { getSession, SessionData, setSession } from "@//lib/auth";
+import { getSession, setSession } from "@//lib/auth";
+import { SessionData } from "@/types/auth";
 import { config } from "@/config";
 
+// Middleware to handle authentication headers and access token refreshes
+// Wrapss fetch requests that needs authentication
+// Takes a fetch request input and optional init object
+// Returns the fetch response with the Authorization header set
 export async function authMiddleware(
   input: RequestInfo,
   init: RequestInit = {}
@@ -11,8 +16,10 @@ export async function authMiddleware(
     throw new Error("No session found");
   }
 
+  // Check if the session is expired or about to expire
   const timeNow = Math.floor(Date.now() / 1000);
-  if (session.expires_at <= timeNow + 30) {
+  const timeBuffer = 30;
+  if (session.expires_at <= timeNow + timeBuffer) {
     session = await refreshAccessToken(session.refresh_token);
   }
 
@@ -26,6 +33,8 @@ export async function authMiddleware(
   return fetch(input, { ...init, headers });
 }
 
+// Refreshes the access token using the refresh token
+// Returns the refreshed session data
 export async function refreshAccessToken(
   refreshToken: string
 ): Promise<SessionData> {

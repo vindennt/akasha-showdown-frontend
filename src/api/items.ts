@@ -1,11 +1,9 @@
+import { ItemIn } from "@/types/item";
 import { authMiddleware } from "@/api/middleware/authMiddleware";
 import { config } from "@/config";
 
-interface ItemIn {
-  title: string;
-  description: string;
-}
-
+// POST method that creates a new item tied to the authenticated user
+// Returns a Response object
 export async function createItem(itemIn: ItemIn): Promise<Response> {
   const url = `${config.API_BASE_URL}/item/create-item`;
 

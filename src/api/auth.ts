@@ -1,17 +1,9 @@
-import { SessionData } from "@/lib/auth";
+import { UserIn, SessionOut } from "@/types/auth";
 import { config } from "@/config";
 
-interface UserOut {
-  session: SessionData;
-  message?: string;
-}
-
-interface UserIn {
-  email: string;
-  password: string;
-}
-
-async function postAuth(endpoint: string, userIn: UserIn): Promise<UserOut> {
+// POST method that handles authentication requests
+// Returns a SessionOut object containing session data
+async function postAuth(endpoint: string, userIn: UserIn): Promise<SessionOut> {
   const url = `${config.API_BASE_URL}/auth/${endpoint}`;
 
   try {
@@ -40,10 +32,10 @@ async function postAuth(endpoint: string, userIn: UserIn): Promise<UserOut> {
   }
 }
 
-export async function signIn(userIn: UserIn): Promise<UserOut> {
+export async function signIn(userIn: UserIn): Promise<SessionOut> {
   return postAuth("signin", userIn);
 }
 
-export async function signUp(userIn: UserIn): Promise<UserOut> {
+export async function signUp(userIn: UserIn): Promise<SessionOut> {
   return postAuth("signup", userIn);
 }
