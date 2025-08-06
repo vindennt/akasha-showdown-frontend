@@ -1,1 +1,1 @@
-# Webgame with Go server
+# Webgame with FastAPI Server and Go Websocket game engine
