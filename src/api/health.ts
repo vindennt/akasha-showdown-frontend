@@ -5,7 +5,9 @@ export async function pingHealth(): Promise<string> {
   const url = `${config.API_BASE_URL}/health/ping`;
 
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, {
+      headers: { "ngrok-skip-browser-warning": "any-value" },
+    });
 
     if (!res.ok) {
       throw new Error("Failed to ping health");
