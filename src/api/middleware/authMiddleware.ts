@@ -1,7 +1,5 @@
 import { getSession, SessionData, setSession } from "@//lib/auth";
-
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY;
+import { config } from "@/config";
 
 export async function authMiddleware(
   input: RequestInfo,
@@ -32,13 +30,13 @@ export async function refreshAccessToken(
   refreshToken: string
 ): Promise<SessionData> {
   try {
-    const url = `${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`;
+    const url = `${config.SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`;
 
     const res = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        apikey: SUPABASE_KEY,
+        apikey: config.SUPABASE_KEY,
       },
       body: JSON.stringify({ refresh_token: refreshToken }),
     });

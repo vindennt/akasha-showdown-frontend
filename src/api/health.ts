@@ -1,7 +1,7 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+import { config } from "@/config";
 
 export async function pingHealth(): Promise<string> {
-  const url = `${API_BASE_URL}/health/ping`;
+  const url = `${config.API_BASE_URL}/health/ping`;
 
   try {
     const res = await fetch(url);

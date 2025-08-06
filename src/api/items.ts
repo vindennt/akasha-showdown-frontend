@@ -1,6 +1,5 @@
 import { authMiddleware } from "@/api/middleware/authMiddleware";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+import { config } from "@/config";
 
 interface ItemIn {
   title: string;
@@ -8,7 +7,7 @@ interface ItemIn {
 }
 
 export async function createItem(itemIn: ItemIn): Promise<Response> {
-  const url = `${API_BASE_URL}/item/create-item`;
+  const url = `${config.API_BASE_URL}/item/create-item`;
 
   try {
     const res = await authMiddleware(url, {

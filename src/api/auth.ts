@@ -1,6 +1,5 @@
 import { SessionData } from "@/lib/auth";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+import { config } from "@/config";
 
 interface UserOut {
   session: SessionData;
@@ -13,7 +12,7 @@ interface UserIn {
 }
 
 async function postAuth(endpoint: string, userIn: UserIn): Promise<UserOut> {
-  const url = `${API_BASE_URL}/auth/${endpoint}`;
+  const url = `${config.API_BASE_URL}/auth/${endpoint}`;
 
   try {
     const res = await fetch(url, {
