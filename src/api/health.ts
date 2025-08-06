@@ -1,8 +1,10 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export async function pingHealth(): Promise<string> {
+  const url = `${API_BASE_URL}/health/ping`;
+
   try {
-    const res = await fetch(`${API_BASE_URL}/health/ping`);
+    const res = await fetch(url);
 
     if (!res.ok) {
       throw new Error("Failed to ping health");

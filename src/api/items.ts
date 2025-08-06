@@ -1,4 +1,4 @@
-import { getAccessToken } from "@/lib/auth";
+import { authMiddleware } from "@/api/middleware/authMiddleware";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -8,20 +8,13 @@ interface ItemIn {
 }
 
 export async function createItem(itemIn: ItemIn): Promise<Response> {
-  // TODO: do away with local session
-
-  const access_token = getAccessToken();
-
-  if (!access_token) {
-    throw new Error("No session found.");
-  }
+  const url = `${API_BASE_URL}/item/create-item`;
 
   try {
-    const res = await fetch(`${API_BASE_URL}/item/create-item`, {
+    const res = await authMiddleware(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
       },
       body: JSON.stringify(itemIn),
     });
