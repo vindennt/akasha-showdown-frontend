@@ -1,5 +1,6 @@
 import { config } from "@/config";
 
+// Interface for the health check response
 export async function pingHealth(): Promise<string> {
   const url = `${config.API_BASE_URL}/health/ping`;
 

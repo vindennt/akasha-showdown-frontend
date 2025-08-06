@@ -1,5 +1,6 @@
 import React from "react";
-import { AuthenticationForm } from "./AuthenticationForm";
+
+import { AuthenticationForm } from "@/components/Auth/AuthenticationForm";
 
 const Auth: React.FC = () => {
   return (

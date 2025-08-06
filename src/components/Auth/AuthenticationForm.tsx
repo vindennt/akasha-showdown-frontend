@@ -12,11 +12,12 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { upperFirst, useToggle } from "@mantine/hooks";
-import { GoogleButton } from "./GoogleButton";
 import { useNavigate } from "react-router-dom";
+import { upperFirst, useToggle } from "@mantine/hooks";
 import { signIn, signUp } from "@/api/auth";
 import { setSession } from "@/lib/auth";
+
+import { GoogleButton } from "@/components/Auth/GoogleButton";
 
 export function AuthenticationForm(props: PaperProps) {
   const [type, toggle] = useToggle(["login", "register"]);

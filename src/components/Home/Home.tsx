@@ -1,8 +1,9 @@
-import { Button, Text, Title } from "@mantine/core";
 import { useState } from "react";
-import classes from "./Home.module.css";
-import { ColorSchemeToggle } from "../Misc/ColorSchemeToggle/ColorSchemeToggle";
-import { pingHealth } from "../../api/health";
+import classes from "@/components/Home/Home.module.css";
+import { Button, Text, Title } from "@mantine/core";
+import { pingHealth } from "@/api/health";
+
+import { ColorSchemeToggle } from "@/components/Misc/ColorSchemeToggle/ColorSchemeToggle";
 
 export function Home() {
   const [health, setHealth] = useState("");
