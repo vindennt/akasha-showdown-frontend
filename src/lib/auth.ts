@@ -7,10 +7,14 @@ export interface SessionData {
     id: string;
     email: string;
   };
+  expires_at: number;
 }
 
 // All in on manager for session data
-// TODO: Handle session storage more securely
+
+export function setSession(session: SessionData): void {
+  localStorage.setItem("session", JSON.stringify(session));
+}
 
 export function getSession(): SessionData | null {
   const sessionRaw = localStorage.getItem("session");
@@ -23,10 +27,6 @@ export function getSession(): SessionData | null {
   } catch {
     return null;
   }
-}
-
-export function setSession(session: SessionData): void {
-  localStorage.setItem("session", JSON.stringify(session));
 }
 
 export function getAccessToken(): string | null {

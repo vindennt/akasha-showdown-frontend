@@ -1,5 +1,6 @@
 import { createItem } from "@/api/items";
 import { getSession } from "@/lib/auth";
+import { refreshAccessToken } from "@/api/middleware/authMiddleware";
 import React, { useEffect, useState } from "react";
 
 const Dashboard: React.FC = () => {
@@ -42,7 +43,23 @@ const Dashboard: React.FC = () => {
       }
     } catch (error) {
       setMessage("Error creating item.");
-      console.error("Error creating item:", error);
+    }
+  };
+
+  const handleRefreshSession = async () => {
+    const localSession = getSession();
+    if (localSession && localSession.refresh_token) {
+      try {
+        const refreshedSession = await refreshAccessToken(
+          localSession.refresh_token
+        );
+        setUserId(refreshedSession.user.id);
+        setEmail(refreshedSession.user.email);
+      } catch (error) {
+        setMessage("Failed to refresh session.");
+      }
+    } else {
+      setMessage("No session found to refresh.");
     }
   };
 
@@ -67,6 +84,9 @@ const Dashboard: React.FC = () => {
               onChange={(e) => setDescription(e.target.value)}
               style={{ width: "100%", marginBottom: "0.5rem" }}
             />
+            <button type="button" onClick={handleRefreshSession}>
+              Refresh Session
+            </button>
             <button
               type="button"
               onClick={handleCreateItem}
