@@ -1,4 +1,5 @@
 import { createItem } from "@/api/items";
+import { getSession } from "@/lib/auth";
 import React, { useEffect, useState } from "react";
 
 const Dashboard: React.FC = () => {
@@ -9,16 +10,15 @@ const Dashboard: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    const localSession = localStorage.getItem("session");
+    const localSession = getSession();
 
     if (localSession) {
       try {
-        const parsedSession = JSON.parse(localSession);
-        if (parsedSession.access_token) {
-          setUserId(parsedSession.user.id || null);
+        if (localSession.access_token) {
+          setUserId(localSession.user.id || null);
         }
-        if (parsedSession.user.email) {
-          setEmail(parsedSession.user.email);
+        if (localSession.user.email) {
+          setEmail(localSession.user.email);
         }
       } catch (error) {
         setMessage("Failed to retrieve user session.");

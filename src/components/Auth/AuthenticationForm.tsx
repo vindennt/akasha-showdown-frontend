@@ -16,6 +16,7 @@ import { upperFirst, useToggle } from "@mantine/hooks";
 import { GoogleButton } from "./GoogleButton";
 import { useNavigate } from "react-router-dom";
 import { signIn, signUp } from "@/api/auth";
+import { setSession } from "@/lib/auth";
 
 export function AuthenticationForm(props: PaperProps) {
   const [type, toggle] = useToggle(["login", "register"]);
@@ -47,11 +48,9 @@ export function AuthenticationForm(props: PaperProps) {
 
     try {
       const response = await (type === "login" ? signIn(body) : signUp(body));
-      // Store
-      // TODO: Handle session storage more securely
 
-      if (response?.session && response?.session.user) {
-        localStorage.setItem("session", JSON.stringify(response.session));
+      if (response?.session.access_token && response?.session.user) {
+        setSession(response.session);
         navigate("/dashboard");
       }
     } catch (error: any) {

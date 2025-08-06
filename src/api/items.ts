@@ -1,3 +1,5 @@
+import { getAccessToken } from "@/lib/auth";
+
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 interface ItemIn {
@@ -8,12 +10,11 @@ interface ItemIn {
 export async function createItem(itemIn: ItemIn): Promise<Response> {
   // TODO: do away with local session
 
-  const localSession = localStorage.getItem("session");
-  if (!localSession) {
+  const access_token = getAccessToken();
+
+  if (!access_token) {
     throw new Error("No session found.");
   }
-  // TODO: handle session more securely
-  const access_token = JSON.parse(localSession).access_token;
 
   try {
     const res = await fetch(`${API_BASE_URL}/item/create-item`, {

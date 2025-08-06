@@ -1,21 +1,15 @@
+import { SessionData } from "@/lib/auth";
+
+interface UserOut {
+  session: SessionData;
+  message?: string;
+}
+
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 interface UserIn {
   email: string;
   password: string;
-}
-
-// TODO: edit as neecessary
-interface UserOut {
-  session: {
-    access_token: string;
-    refresh_token: string;
-    user: {
-      id: string;
-      email: string;
-      user_metadata: {};
-    };
-  };
 }
 
 export async function signUp(userIn: UserIn): Promise<UserOut> {
