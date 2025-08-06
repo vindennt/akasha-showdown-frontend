@@ -15,6 +15,7 @@ import { useForm } from "@mantine/form";
 import { upperFirst, useToggle } from "@mantine/hooks";
 import { GoogleButton } from "./GoogleButton";
 import { useNavigate } from "react-router-dom";
+import { signIn, signUp } from "@/api/auth";
 
 export function AuthenticationForm(props: PaperProps) {
   const [type, toggle] = useToggle(["login", "register"]);
@@ -37,42 +38,25 @@ export function AuthenticationForm(props: PaperProps) {
 
   const navigate = useNavigate();
 
-  // TODO: use a router to handle fetches like this
   // Handle form submission
   const handleSubmit = async (values: typeof form.values) => {
-    const endpoint =
-      type === "login"
-        ? `${import.meta.env.VITE_API_URL}/auth/signin`
-        : `${import.meta.env.VITE_API_URL}/auth/signup`;
-
     const body = {
       email: values.email,
       password: values.password,
     };
 
     try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
-      // Handle response as needed
-      if (!response.ok) {
-        // TODO: Handle error
-      }
-
+      const response = await (type === "login" ? signIn(body) : signUp(body));
       // Store
       // TODO: Handle session storage more securely
-      const data = await response.json();
 
-      if (data?.session && data?.user) {
-        localStorage.setItem("session", JSON.stringify(data));
+      if (response?.session && response?.session.user) {
+        localStorage.setItem("session", JSON.stringify(response.session));
         navigate("/dashboard");
       }
-    } catch (error) {
-      // Handle fetch error
+    } catch (error: any) {
+      // TODO: display error message
+      // setError(error.message);
     }
   };
 

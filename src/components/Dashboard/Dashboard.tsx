@@ -1,3 +1,4 @@
+import { createItem } from "@/api/items";
 import React, { useEffect, useState } from "react";
 
 const Dashboard: React.FC = () => {
@@ -13,45 +14,25 @@ const Dashboard: React.FC = () => {
     if (localSession) {
       try {
         const parsedSession = JSON.parse(localSession);
-        if (parsedSession.session.access_token) {
+        if (parsedSession.access_token) {
           setUserId(parsedSession.user.id || null);
         }
         if (parsedSession.user.email) {
           setEmail(parsedSession.user.email);
         }
       } catch (error) {
-        console.error("Failed to parse session from localStorage", error);
+        setMessage("Failed to retrieve user session.");
       }
     }
   }, []);
 
   const handleCreateItem = async () => {
-    const localSession = localStorage.getItem("session");
-    if (!localSession) {
-      setMessage("No session found.");
-      return;
-    }
-    let accessToken = "";
     try {
-      const parsedSession = JSON.parse(localSession);
-      accessToken = parsedSession.session.access_token;
-    } catch {
-      setMessage("Invalid session data.");
-      return;
-    }
+      const response = await createItem({
+        title,
+        description,
+      });
 
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/items/create-item`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({ title, description }),
-        }
-      );
       if (response.ok) {
         setMessage("Item created successfully!");
         setTitle("");
@@ -61,6 +42,7 @@ const Dashboard: React.FC = () => {
       }
     } catch (error) {
       setMessage("Error creating item.");
+      console.error("Error creating item:", error);
     }
   };
 

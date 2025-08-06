@@ -2,19 +2,17 @@ import { Button, Text, Title } from "@mantine/core";
 import { useState } from "react";
 import classes from "./Home.module.css";
 import { ColorSchemeToggle } from "../Misc/ColorSchemeToggle/ColorSchemeToggle";
+import { pingHealth } from "../../api/health";
 
 export function Home() {
-  const [response, setResponse] = useState("");
+  const [health, setHealth] = useState("");
 
   const handleClick = async () => {
-    const url = import.meta.env.VITE_API_URL;
-
     try {
-      const res = await fetch(`${url}/health/ping`);
-      const text = await res.text();
-      setResponse(text);
-    } catch (error) {
-      setResponse("Failed to fetch");
+      const text = await pingHealth();
+      setHealth(text);
+    } catch (error: any) {
+      setHealth(error?.message || "Failed to fetch");
     }
   };
 
@@ -49,9 +47,9 @@ export function Home() {
         Ping
       </Button>
 
-      {response && (
+      {health && (
         <Text ta="center" mt="lg">
-          Response: {response}
+          Response: {health}
         </Text>
       )}
     </>
