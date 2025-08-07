@@ -1,101 +1,81 @@
-import React, { useEffect, useState } from "react";
-import { getUser, getSession } from "@/lib/auth";
-import { refreshAccessToken } from "@/api/middleware/authMiddleware";
-import { createItem } from "@/api/items";
+import { useEffect, useState } from "react";
+import { getUser } from "@/lib/auth";
+import { Layout } from "@/components/Layout/Layout";
+import {
+  Container,
+  Title,
+  Text,
+  Card,
+  Stack,
+  TextInput,
+  Button,
+  Group,
+  Divider,
+} from "@mantine/core";
+import { ChatRoom } from "@/components/Dashboard/ChatRoom";
 
-const Dashboard: React.FC = () => {
-  const [userId, setUserId] = useState<string | null>(null);
+export default function Dashboard() {
   const [email, setEmail] = useState<string | null>(null);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const user = getUser();
-
     if (user) {
-      setUserId(user.id);
       setEmail(user.email);
-    } else {
-      setMessage("Failed to retrieve user.");
     }
   }, []);
 
-  const handleCreateItem = async () => {
-    try {
-      const response = await createItem({
-        title,
-        description,
-      });
-
-      if (response.ok) {
-        setMessage("Item created successfully!");
-        setTitle("");
-        setDescription("");
-      } else {
-        setMessage("Failed to create item.");
-      }
-    } catch (error) {
-      setMessage("Error creating item.");
-    }
-  };
-
-  const handleRefreshSession = async () => {
-    const localSession = getSession();
-    if (localSession && localSession.refresh_token) {
-      try {
-        const refreshedSession = await refreshAccessToken(
-          localSession.refresh_token
-        );
-        setUserId(refreshedSession.user.id);
-        setEmail(refreshedSession.user.email);
-      } catch (error) {
-        setMessage("Failed to refresh session.");
-      }
-    } else {
-      setMessage("No session found to refresh.");
-    }
-  };
-
   return (
-    <div style={{ maxWidth: 400, margin: "0 auto", padding: "2rem" }}>
-      <h2>Hello</h2>
-      {userId && email ? (
-        <>
-          <p>User ID: {userId}</p>
-          <p>Email: {email}</p>
-          <div style={{ marginTop: "2rem" }}>
-            <input
-              type="text"
-              placeholder="Title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              style={{ width: "100%", marginBottom: "0.5rem" }}
-            />
-            <textarea
-              placeholder="Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              style={{ width: "100%", marginBottom: "0.5rem" }}
-            />
-            <button type="button" onClick={handleRefreshSession}>
-              Refresh Session
-            </button>
-            <button
-              type="button"
-              onClick={handleCreateItem}
-              disabled={!title || !description}
-            >
-              Create Item
-            </button>
-            {message && <p>{message}</p>}
-          </div>
-        </>
-      ) : (
-        <p>No user session found.</p>
-      )}
-    </div>
-  );
-};
+    <Layout>
+      <Container size="md" style={{ padding: "2rem 0" }}>
+        <Title order={2}>Dashboard</Title>
+        <Text size="sm" color="dimmed" mt="xs">
+          Logged in as:{" "}
+          <Text component="span" fw={500}>
+            {email}
+          </Text>
+        </Text>
 
-export default Dashboard;
+        <Divider my="lg" />
+
+        <Title order={3} style={{ marginBottom: 8 }}>
+          Lobby System
+        </Title>
+        <Stack gap="md" style={{ marginBottom: 16 }}>
+          <Card withBorder padding="md">
+            <Text fw={500} style={{ marginBottom: 8 }}>
+              Your Lobbies
+            </Text>
+            <Stack gap="sm">
+              <Text>• Awesome Game Lobby</Text>
+              <Text>• Test Lobby</Text>
+            </Stack>
+          </Card>
+
+          <Card withBorder padding="md">
+            <Text fw={500} style={{ marginBottom: 8 }}>
+              Find a Lobby
+            </Text>
+            <Group>
+              <TextInput placeholder="Search lobbies" style={{ flex: 1 }} />
+              <Button>Search</Button>
+            </Group>
+          </Card>
+
+          <Card withBorder padding="md">
+            <Text fw={500} style={{ marginBottom: 8 }}>
+              Create a Lobby
+            </Text>
+            <Group>
+              <TextInput placeholder="Lobby name" style={{ flex: 1 }} />
+              <Button>Create</Button>
+            </Group>
+          </Card>
+        </Stack>
+
+        <Divider my="lg" />
+
+        <ChatRoom />
+      </Container>
+    </Layout>
+  );
+}
