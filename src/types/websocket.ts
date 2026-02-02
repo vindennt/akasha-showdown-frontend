@@ -7,7 +7,6 @@ type ConnectionState = "CONNECTING" | "OPEN" | "CLOSED";
 type Peer = {
   id: number;
   state: string;
-  color: string;
   self: boolean;
 };
 
@@ -24,7 +23,6 @@ type WelcomeEvent = PeerEvent & { type: "WELCOME"; peers: Peer[] };
 type PeerJoinEvent = PeerEvent & {
   type: "PEER_JOIN";
   state: string;
-  color: string;
 };
 type PeerLeaveEvent = PeerEvent & { type: "PEER_LEAVE" };
 type PeerChangeEvent = PeerEvent & {

@@ -10,6 +10,7 @@ import {
 
 let _instance: ConnectedWorld;
 
+// Manage the state of the world of connected peers
 class ConnectedWorld {
   // Events from the websocket connection
   readonly websocketEvents;
@@ -20,32 +21,34 @@ class ConnectedWorld {
     const wc = getWebsocketConnection();
     this.websocketEvents = wc.events;
 
+    // Handle each type of world event
     const worldEventListener = (e: WorldEvent) => {
       switch (e.type) {
         case "WELCOME": {
           const welcomeEvent = e as WelcomeEvent;
           for (const peer of welcomeEvent.peers) {
+            const isSelf = welcomeEvent.id === peer.id;
             this.world.set(peer.id, {
               ...peer,
-              self: welcomeEvent.id === peer.id,
+              self: isSelf,
             });
           }
           break;
         }
         case "PEER_JOIN": {
-          console.log("ConnectedWorld PEER_JOIN event", e);
           const peerJoinEvent = e as PeerJoinEvent;
-          const { id, state, color } = peerJoinEvent;
-          this.world.set(id, { id, state, color, self: false });
+          const { id, state } = peerJoinEvent;
+          this.world.set(id, { id, state, self: false });
           break;
         }
         case "PEER_LEAVE": {
-          console.log("ConnectedWorld PEER_JOIN event", e);
           const peerLeaveEvent = e as PeerLeaveEvent;
           this.world.delete(peerLeaveEvent.id);
           break;
         }
+        // TODO: handle peer change for state changes
         case "PEER_CHANGE": {
+          console.log("Handling PEER_CHANGE event");
           const peerChangeEvent = e as PeerChangeEvent;
           this.world.get(peerChangeEvent.id)!.state = peerChangeEvent.state;
           break;
@@ -53,7 +56,7 @@ class ConnectedWorld {
       }
     };
 
-    // Add a listener for worldEvents
+    // Add the listener for worldEvents
     this.websocketEvents.addListener("worldEvent", worldEventListener);
   }
 }

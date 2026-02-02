@@ -7,9 +7,8 @@ type Props = { peerId: number };
 export default function PeerComponent({ peerId }: Props) {
   const { peer } = usePeer(peerId);
   const body = peer ? <PeerBody peer={peer} /> : <em>no peer info</em>;
-  const border = `1px dotted ${peer ? peer.color : "black"}`;
   return (
-    <div style={{ border, borderRadius: "5px", padding: 5 }}>
+    <div style={{ borderRadius: "5px", padding: 5 }}>
       {body}
       <div>renders: {++_debug_renders}</div>
     </div>

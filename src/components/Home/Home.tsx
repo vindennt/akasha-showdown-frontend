@@ -12,8 +12,8 @@ export function Home() {
     <Peer peerId={peer.id} key={peer.id} />
   ));
 
-  console.log("Connected Peers:");
-  console.log(peers);
+  // TODO: remove debug log
+  console.log(`Connected Peers: ${peers.length}`);
 
   return (
     <Layout>
@@ -29,7 +29,7 @@ export function Home() {
             Showdown
           </Text>
         </Title>
-        <Text size="lg" color="dimmed" mt="md">
+        <Text size="lg" mt="md">
           Web game coming soon
         </Text>
         <Container>
