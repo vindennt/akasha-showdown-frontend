@@ -3,7 +3,7 @@ import { ConnectionState } from "@/types/websocket";
 
 // TODO: use env for abstract url
 // const WEBSOCKET_URL = "ws://localhost:8686";
-const WEBSOCKET_URL = "ws://localhost:8282/subscribe";
+const WEBSOCKET_URL = "ws://localhost:8282/ws/subscribe";
 let _instance: WebsocketConnection;
 
 class WebsocketConnection {
@@ -28,7 +28,7 @@ class WebsocketConnection {
     // Code 1000 means normal closure
     this.socket.onclose = (event) => {
       console.log(
-        `WebSocketConnection.onclose clean:${event.wasClean} code:${event.code} reason:${event.reason}`
+        `WebSocketConnection.onclose clean:${event.wasClean} code:${event.code} reason:${event.reason}`,
       );
 
       this.setState("CLOSED");
