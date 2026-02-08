@@ -3,10 +3,16 @@ import { usePeer } from "@/lib/websocket/useWorld";
 import { Peer } from "@/types/websocket";
 import getWebsocketConnection from "@/lib/websocket/websocket";
 
-type Props = { peerId: number };
-export default function PeerComponent({ peerId }: Props) {
+// TODO: non hardcoded isSelf
+type Props = { peerId: number; isSelf?: boolean };
+export default function PeerComponent({ peerId, isSelf = false }: Props) {
   const { peer } = usePeer(peerId);
-  const body = peer ? <PeerBody peer={peer} /> : <em>no peer info</em>;
+  const peerWithSelf = peer ? { ...peer, self: isSelf } : undefined;
+  const body = peerWithSelf ? (
+    <PeerBody peer={peerWithSelf} />
+  ) : (
+    <em>no peer info</em>
+  );
   return (
     <div style={{ borderRadius: "5px", padding: 5 }}>
       {body}
