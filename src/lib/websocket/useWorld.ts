@@ -6,11 +6,19 @@ import { Peer, PeerChangeEvent, WorldEvent } from "@/types/websocket";
 export function useWorld() {
   const cw = getConnectedWorld();
   const [boxedWorld, setBoxedWorld] = React.useState({ world: cw.world });
+  const [myId, setMyId] = React.useState<number>(0); // TODO: possbly more elegant way to do this?
 
   const worldChangeListener = React.useCallback(
     (e: WorldEvent) => {
       // Check for events that effect the world
-      console.log("useWorld running worldChangeListener");
+
+      if (e.type === "WELCOME") {
+        const welcomeEvent = e as any; // WelcomeEvent type
+        if (welcomeEvent.id !== undefined) {
+          setMyId(welcomeEvent.id);
+        }
+      }
+
       if (
         e.type === "WELCOME" ||
         e.type === "PEER_JOIN" ||
@@ -20,7 +28,7 @@ export function useWorld() {
         setBoxedWorld({ world: cw.world });
       }
     },
-    [cw]
+    [cw],
   );
 
   React.useEffect(() => {
@@ -31,7 +39,7 @@ export function useWorld() {
     };
   }, [cw, worldChangeListener]);
 
-  return boxedWorld;
+  return { ...boxedWorld, myId };
 }
 
 // Hook to use websocket connection to get listener for new peers or peerchanges
@@ -52,7 +60,7 @@ export function usePeer(peerId: number) {
         }
       }
     },
-    [cw, peerId]
+    [cw, peerId],
   );
 
   React.useEffect(() => {

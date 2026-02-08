@@ -1,27 +1,35 @@
 import EventEmitter from "eventemitter3";
 import { ConnectionState } from "@/types/websocket";
 
-// TODO: use env for abstract url
-// const WEBSOCKET_URL = "ws://localhost:8686";
+// TODO: use env for url
 const WEBSOCKET_URL = "ws://localhost:8282/ws/subscribe";
-let _instance: WebsocketConnection;
+let _instance: WebsocketConnection | null = null;
 
 class WebsocketConnection {
   private state: ConnectionState = "CLOSED";
 
   readonly events = new EventEmitter();
-  private readonly socket: WebSocket;
+  private socket: WebSocket | null = null;
 
-  constructor(url: string) {
+  constructor() {
+    this.state = "CLOSED"; // Init closed. Allow manual connect
+  }
+
+  connect() {
+    if (this.state === "OPEN" || this.state === "CONNECTING") {
+      return;
+    }
+
     this.setState("CONNECTING");
 
-    this.socket = new WebSocket(url);
+    this.socket = new WebSocket(WEBSOCKET_URL);
     this.socket.binaryType = "arraybuffer";
 
     // Connection opened
     this.socket.onopen = (_) => {
       this.events.emit("websocket.open");
       this.setState("OPEN");
+      console.log("WebSocket connected!");
     };
 
     // Connection closed
@@ -48,15 +56,38 @@ class WebsocketConnection {
     };
   }
 
+  disconnect() {
+    if (this.socket) {
+      this.socket.close(1000, "Self disconnected");
+      this.socket = null;
+    }
+    this.setState("CLOSED");
+  }
+
+  getState(): ConnectionState {
+    return this.state;
+  }
+
   setState(newState: string) {
     this.state = newState as ConnectionState;
     this.events.emit("websocket.setState", newState);
   }
+
+  sendMessage(data: any) {
+    // Check if even connected
+    if (this.state !== "OPEN" || !this.socket) {
+      console.warn("Not connected");
+      return;
+    }
+
+    const message = typeof data === "string" ? data : JSON.stringify(data);
+    this.socket.send(message);
+  }
 }
 
-export default function getWebsocketConnection() {
+export default function getWebsocketConnection(): WebsocketConnection {
   if (!_instance) {
-    _instance = new WebsocketConnection(WEBSOCKET_URL);
+    _instance = new WebsocketConnection();
   }
   return _instance;
 }
