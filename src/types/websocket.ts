@@ -10,12 +10,20 @@ type Peer = {
   self: boolean;
 };
 
-// Types of world events from the server
+//Types of world events from the server
 // "WELCOME": sent when first connecting, includes current peers
 // "PEER_JOIN": sent when a new peer joins
 // "PEER_LEAVE": sent when a peer leaves
 // "PEER_CHANGE": sent when a peer changes state
-type WorldEventType = "WELCOME" | "PEER_JOIN" | "PEER_LEAVE" | "PEER_CHANGE";
+// "CHAT_MESSAGE": sent when a chat message is sent
+// "MATCH_RESULT": game result between 2 players
+type WorldEventType =
+  | "WELCOME"
+  | "PEER_JOIN"
+  | "PEER_LEAVE"
+  | "PEER_CHANGE"
+  | "CHAT_MESSAGE"
+  | "MATCH_RESULT";
 
 type WorldEvent = { type: WorldEventType };
 type PeerEvent = WorldEvent & { id: number };
@@ -30,14 +38,28 @@ type PeerChangeEvent = PeerEvent & {
   state: string;
 };
 
+type ChatMessageEvent = WorldEvent & {
+  type: "CHAT_MESSAGE";
+  sender_id: number;
+  message: string;
+  lobby_id: string;
+  timestamp: number;
+};
+
+type MatchResultEvent = WorldEvent & {
+  type: "MATCH_RESULT";
+  winner_id: number;
+  loser_id: number;
+};
+
 export type {
   ConnectionState,
-  Peer,
-  WorldEventType,
   WorldEvent,
-  PeerEvent,
+  WorldEventType,
   WelcomeEvent,
   PeerJoinEvent,
   PeerLeaveEvent,
   PeerChangeEvent,
+  ChatMessageEvent,
+  MatchResultEvent,
 };
