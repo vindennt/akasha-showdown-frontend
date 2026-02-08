@@ -90,9 +90,11 @@ export function ChatBox() {
 
     console.log("[CHAT FRONTEND] Sending message:", chatMessage);
 
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8282";
+
     try {
       // Send to server via HTTP POST
-      const response = await fetch("http://localhost:8282/ws/chat", {
+      const response = await fetch(`${API_URL}/ws/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(chatMessage),

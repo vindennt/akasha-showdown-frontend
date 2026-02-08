@@ -43,9 +43,10 @@ export function MatchmakingQueue() {
     setMatchFound(false);
     setMatchResult(null);
 
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8282";
+
     try {
-      const response = await fetch("http://localhost:8282/ws/queue/join", {
-        // TODO: env url
+      const response = await fetch(`${API_URL}/ws/queue/join`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: myId }),

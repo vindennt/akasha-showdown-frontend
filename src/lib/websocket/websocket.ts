@@ -1,8 +1,10 @@
 import EventEmitter from "eventemitter3";
 import { ConnectionState } from "@/types/websocket";
 
-// TODO: use env for url
-const WEBSOCKET_URL = "ws://localhost:8282/ws/subscribe";
+// Get API URL from environment and convert to WebSocket URL
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8282";
+const WEBSOCKET_URL = `${API_URL.replace(/^http/, "ws")}/ws/subscribe`;
+
 let _instance: WebsocketConnection | null = null;
 
 class WebsocketConnection {
