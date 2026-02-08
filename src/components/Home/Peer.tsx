@@ -3,28 +3,26 @@ import { usePeer } from "@/lib/websocket/useWorld";
 import { Peer } from "@/types/websocket";
 import getWebsocketConnection from "@/lib/websocket/websocket";
 
-// TODO: non hardcoded isSelf
 type Props = { peerId: number; isSelf?: boolean };
-export default function PeerComponent({ peerId, isSelf = false }: Props) {
+
+const PeerComponent = React.memo(({ peerId, isSelf = false }: Props) => {
+  const renderCount = React.useRef(0);
+  renderCount.current++;
+
   const { peer } = usePeer(peerId);
-  const peerWithSelf = peer ? { ...peer, self: isSelf } : undefined;
-  const body = peerWithSelf ? (
-    <PeerBody peer={peerWithSelf} />
-  ) : (
-    <em>no peer info</em>
-  );
+  const p = peer ? { ...peer, self: isSelf } : undefined;
+  const body = p ? <PeerBody peer={p} /> : <em>no peer info</em>;
   return (
     <div style={{ borderRadius: "5px", padding: 5 }}>
       {body}
-      <div>renders: {++_debug_renders}</div>
+      <div>renders: {renderCount.current}</div>
     </div>
   );
-}
-
-let _debug_renders = 0;
+});
 
 type PBProps = { peer: Peer };
-function PeerBody({ peer }: PBProps) {
+
+const PeerBody = React.memo(({ peer }: PBProps) => {
   const [stateFieldValue, setStateFieldValue] = React.useState(peer.state);
   const stateField = peer.self ? (
     <input
@@ -57,4 +55,6 @@ function PeerBody({ peer }: PBProps) {
       <div>State: {stateField}</div>
     </span>
   );
-}
+});
+
+export default PeerComponent;
