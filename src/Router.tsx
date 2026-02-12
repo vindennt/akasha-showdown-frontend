@@ -3,6 +3,7 @@ import { HomePage } from "@/pages/Home.page";
 import { AuthPage } from "@/pages/Auth.page";
 import { DashboardPage } from "@/pages/Dashboard.page";
 import { NotFoundPage } from "@/pages/NotFound.page";
+import { EnkaTest } from "@/pages/EnkaTest.page";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <DashboardPage />,
+  },
+  {
+    path: "/enka",
+    element: <EnkaTest />,
   },
   {
     path: "*",
